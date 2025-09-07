@@ -2,27 +2,49 @@ import google.generativeai as genai
 import argparse
 import os
 import json
-import argparse
 import trafilatura
 from bs4 import BeautifulSoup
 import requests
 from dotenv import load_dotenv
 
+
 load_dotenv() #loads .env file which contains API key
+
+
+def fetch_extract(url, max_retries=3, timeout: int = 30) -> str:
+    #fetch and extract method
+    for attempt in range(max_retries):
+        download = trafilatura.fetch_url(url, no_ssl=True)
+        if download:
+            extract_text = trafilatura.extract(download)
+            if extract_text:
+                return extract_text
+    
+    #fall back methhod
+    for attempt in range(max_retries):
+        response = requests.get(url, timeout=timeout)
+        if response.status_code == 200:
+            soup = BeautifulSoup(response.text, 'html.parser')
+            text = soup.get_text()
+            if text:
+                return text
+            
+    return ""
 
 def main():
     parser = argparse.ArgumentParser(description="Summarize a webapage in 3 sentences")
-    parser.add_argument("url", help="The URL of the webpage to summarize")
+    parser.add_argument("--url", required=True,help="This is the URL to run the summary")
     args = parser.parse_args()
     url = args.url
 
     #fetching HTML content
-    response = requests.get(url)
-    content = response.text
-    
-    
-    #content extraction !!! still missing site policies and handle errors with retries !!!
-    text = trafilatura.extract(content)
+    text = fetch_extract(url)
+    if not text:
+        print(json.dumps({"Summary": "Error fetching or extracting content", 
+                          "Keywords": [], 
+                          "References": url}, indent=2, ensure_ascii=False))
+        return
+
 
     #setting up API key
     genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -45,11 +67,11 @@ def main():
     }}"""
 
     #generate the output
-    response = client.generate_content(prompt)
+    gemini_response = client.generate_content(prompt)
 
     #parse into JSON format
     try:
-        data = json.loads(response.text)
+        data = json.loads(gemini_response.text)
     except json.JSONDecodeError as e:
         print("Error parsing JSON:", e)
         data = {"Summary": "Error parsing summary", "Keywords": [], "References": url}

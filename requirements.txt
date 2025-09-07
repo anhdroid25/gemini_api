@@ -1,0 +1,4 @@
+requests
+trafilatura
+google-generativeai
+beautifulsoup4

@@ -59,6 +59,7 @@ def main():
         "top_k": 40,
         "top_p": 0.9,
         "max_output_tokens": 512,
+        "response_mime_type": "application/json",
 
     }
     #choosing model
@@ -66,13 +67,13 @@ def main():
 
     #prompt engineering:
     prompt=f"""
-    You are a professional summarizer. Summarize the following URL's content in a single paragraph with 3 sentences. Keep the summary factual, concise, and single-paragraphed. Do not add any additional information or context. Return JSON file like this:
+    You are a professional summarizer. Summarize the following URL's content in a single paragraph with 3 sentences. Keep the summary factual, concise, and single-paragraphed. Do not add any additional information or context. Return valid JSON in this format:
     {{
         "Summary": "<One paragraph that contains 3 sentences>",
         "Keywords": ["<keyword1>", "<keyword2>", "<keyword3>", "<keyword4>", "<keyword5>"],
         "References": "{url}"
     }}
-    Content: {context} #add extracted content
+    Content: {context}
     """.strip()
 
     #generate the output

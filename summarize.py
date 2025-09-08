@@ -7,6 +7,7 @@ from bs4 import BeautifulSoup
 import requests
 from dotenv import load_dotenv
 
+# URL used: https://www.cbsnews.com/news/venezuela-fighter-jets-navy-ship-trump-maduro/
 
 load_dotenv() #loads .env file which contains API key
 
@@ -59,7 +60,7 @@ def main():
         "top_k": 40,
         "top_p": 0.9,
         "max_output_tokens": 512,
-        "response_mime_type": "application/json",
+        "response_mime_type": "application/json", #has to be in json format
 
     }
     #choosing model

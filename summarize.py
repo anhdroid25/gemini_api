@@ -50,7 +50,6 @@ def main():
                           "References": url}, indent=2, ensure_ascii=False))
         return
 
-
     #setting up API key
     context = text.strip() #extract the text to feed to Gemini
 
@@ -70,6 +69,7 @@ def main():
     prompt=f"""
     You are a professional summarizer. Summarize the following URL's content in a single paragraph with 3 sentences. Keep the summary factual, concise, and single-paragraphed. Do not add any additional information or context. Return valid JSON in this format:
     {{
+        "From": "{url}",
         "Summary": "<One paragraph that contains 3 sentences>",
         "Keywords": ["<keyword1>", "<keyword2>", "<keyword3>", "<keyword4>", "<keyword5>"],
         "References": "{url}"

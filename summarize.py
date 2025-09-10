@@ -81,6 +81,7 @@ def main():
     gemini_response = client.generate_content(prompt)
 
     #parse into JSON format
+    print("Raw response:", gemini_response.text)  # Debug: print the raw response
     try:
         data = json.loads(gemini_response.text)
     except json.JSONDecodeError as e:

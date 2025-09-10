@@ -53,7 +53,7 @@ def main():
     #setting up API key
     context = text.strip() #extract the text to feed to Gemini
 
-    genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+    genai.configure(api_key=os.getenv("GOOGLE_API_KEY")) #fetch API key from .env file
     configuration={
         "temperature": 0.2,
         "top_k": 40,
@@ -89,6 +89,8 @@ def main():
         data = {"Summary": "Error parsing summary", "Keywords": [], "References": url}
     print(json.dumps(data, indent=2, ensure_ascii=False))
 
+    with open("test.json", "w") as f:
+        json.dump(data, f, indent=2, ensure_ascii=False)
 
 if __name__ == "__main__":
     main()
